@@ -1,0 +1,26 @@
+.crops-wrapper {
+  text-align: center;
+  padding: 20px;
+}
+
+.preview {
+  width: 220px;
+  margin: 20px;
+  border-radius: 12px;
+}
+
+button {
+  padding: 10px 20px;
+  background: #0f7b3f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 20px;
+  background: #f1f3f5;
+  padding: 15px;
+  border-radius: 10px;
+}

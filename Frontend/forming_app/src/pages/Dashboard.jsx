@@ -1,18 +1,61 @@
 import "./Dashboard.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ChatBot from "./ChatBot";
+import Weather from "./Weather"; // ✅ IMPORT ADDED
+import Crops from "./Crops";
 
 function Dashboard() {
   const navigate = useNavigate();
-  const userData = JSON.parse(localStorage.getItem("user"));
 
-  // ✅ Default = PROFILE (important)
+  const storedUser = JSON.parse(localStorage.getItem("user")) || {};
+
   const [activeTab, setActiveTab] = useState("profile");
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [profile, setProfile] = useState({
+    name: storedUser.name || "Farmer Name",
+    email: storedUser.email || "farmer@example.com",
+    headline:
+      storedUser.headline || "🌾 Smart Farmer | Agri-Tech Enthusiast",
+    location: storedUser.location || "India",
+    about:
+      storedUser.about ||
+      "Passionate farmer using modern technology to improve crop yield and sustainability.",
+    phone: storedUser.phone || "",
+    image: storedUser.image || "",
+  });
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) setProfile(user);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate("/");
+  };
+
+  const handleChange = (e) => {
+    setProfile({ ...profile, [e.target.name]: e.target.value });
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfile({ ...profile, image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSave = () => {
+    localStorage.setItem("user", JSON.stringify(profile));
+    const updatedUser = JSON.parse(localStorage.getItem("user"));
+    setProfile(updatedUser);
+    setIsEditing(false);
   };
 
   return (
@@ -67,66 +110,113 @@ function Dashboard() {
       {/* Main Content */}
       <div className="main-content">
 
-        {/* ================= PROFILE VIEW ================= */}
+        {/* PROFILE */}
         {activeTab === "profile" && (
           <div className="profile-page">
 
-            <div className="profile-card">
-              
-              <div className="avatar">
-                {userData?.image ? (
-                  <img src={userData.image} alt="profile" />
-                ) : (
-                  userData?.name?.charAt(0)?.toUpperCase() || "F"
-                )}
+            <div className="profile-banner"></div>
+
+            <div className="profile-container">
+
+              <div className="profile-left">
+
+                <div className="profile-header">
+
+                  <div className="avatar large">
+                    {profile.image ? (
+                      <img src={profile.image} alt="profile" />
+                    ) : (
+                      profile.name?.charAt(0)?.toUpperCase()
+                    )}
+                  </div>
+
+                  {isEditing && (
+                    <input type="file" onChange={handleImageUpload} />
+                  )}
+
+                  <div className="profile-basic-info">
+                    {isEditing ? (
+                      <>
+                        <input name="name" value={profile.name} onChange={handleChange} />
+                        <input name="headline" value={profile.headline} onChange={handleChange} />
+                        <input name="location" value={profile.location} onChange={handleChange} />
+                      </>
+                    ) : (
+                      <>
+                        <h2>{profile.name}</h2>
+                        <p className="headline">{profile.headline}</p>
+                        <p className="location">📍 {profile.location}</p>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="edit-btn-container">
+                    {isEditing ? (
+                      <button onClick={handleSave} className="save-btn">Save</button>
+                    ) : (
+                      <button onClick={() => setIsEditing(true)} className="edit-btn">Edit</button>
+                    )}
+                  </div>
+
+                </div>
+
+                <div className="profile-section">
+                  <h3>About</h3>
+                  {isEditing ? (
+                    <textarea name="about" value={profile.about} onChange={handleChange} />
+                  ) : (
+                    <p>{profile.about}</p>
+                  )}
+                </div>
+
+                <div className="profile-section">
+                  <h3>Skills</h3>
+                  <div className="skills">
+                    <span>Crop Management</span>
+                    <span>Soil Analysis</span>
+                    <span>Smart Irrigation</span>
+                    <span>Agri-Tech Tools</span>
+                  </div>
+                </div>
+
               </div>
 
-              <h2>{userData?.name || "Farmer"}</h2>
-              <p>{userData?.email || "farmer@example.com"}</p>
-
-              <div className="profile-info-box">
-                <p>🌾 Role: Farmer</p>
-                <p>📍 Location: India</p>
-                <p>🚜 Account Type: Premium</p>
+              <div className="profile-right">
+                <div className="profile-card small">
+                  <h4>Contact Info</h4>
+                  {isEditing ? (
+                    <>
+                      <input name="email" value={profile.email} onChange={handleChange} />
+                      <input name="phone" value={profile.phone} onChange={handleChange} />
+                    </>
+                  ) : (
+                    <>
+                      <p>📧 {profile.email}</p>
+                      <p>📱 {profile.phone || "Not added"}</p>
+                    </>
+                  )}
+                </div>
               </div>
+
             </div>
-
           </div>
         )}
 
-        {/* ================= WEATHER ================= */}
+        {/* WEATHER TAB */}
         {activeTab === "weather" && (
-          <div className="placeholder">
-            <h2>🌦 Weather Module Coming Soon</h2>
+          <div className="tab-wrapper">
+            <Weather />
           </div>
         )}
 
-        {/* ================= CROPS ================= */}
-        {activeTab === "crops" && (
-          <div className="placeholder">
-            <h2>🌱 Crops Module Coming Soon</h2>
-          </div>
-        )}
-
-        {/* ================= MARKET ================= */}
-        {activeTab === "market" && (
-          <div className="placeholder">
-            <h2>💰 Market Module Coming Soon</h2>
-          </div>
-        )}
-
-        {/* ================= ANALYTICS ================= */}
-        {activeTab === "analytics" && (
-          <div className="placeholder">
-            <h2>📊 Analytics Module Coming Soon</h2>
-          </div>
-        )}
+        {/* OTHER TABS */}
+        {activeTab === "crops" && <div className="placeholder"><Crops /></div>}
+        {activeTab === "market" && <div className="placeholder"><h2>💰 Coming Soon</h2></div>}
+        {activeTab === "analytics" && <div className="placeholder"><h2>📊 Coming Soon</h2></div>}
 
       </div>
 
-      {/* Chatbot */}
       <ChatBot />
-
     </div>
   );
 }

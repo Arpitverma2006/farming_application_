@@ -8,6 +8,7 @@ import Advisory from "./pages/Advisory.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import ChatBot from "./pages/ChatBot.jsx";
 import UserPortal from "./pages/UserPortal.jsx";
+import Crops from "./pages/Crops.jsx";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/chatbot" element={<ChatBot/>}/>
         <Route path="/userportal" element={<UserPortal/>}></Route>
+        <Route path="/crops" element={<Crops/>}></Route>
+
       </Routes>
     </Router>
   );

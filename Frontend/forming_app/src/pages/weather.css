@@ -1,43 +1,127 @@
-
-
+/* WRAPPER */
 .weather-wrapper {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f7b3f, #5bbf6a);
-  color: white;
-  text-align: center;
-  padding: 30px;
+  background: linear-gradient(to right, #eef2f3, #ffffff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
+/* CONTAINER */
+.weather-container {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* TITLE */
+.title {
+  color: #0f7b3f;
+  margin-bottom: 20px;
+}
+
+/* SEARCH */
 .search-box {
-  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
 }
 
 .search-box input {
-  padding: 10px;
-  width: 250px;
-  border-radius: 6px 0 0 6px;
+  flex: 1;
+  padding: 12px;
+  border-radius: 30px 0 0 30px;
   border: none;
+  background: #f1f3f5;
+  outline: none;
 }
 
 .search-box button {
-  padding: 10px 15px;
+  padding: 12px 18px;
   border: none;
-  background: #0c5f30;
+  background: linear-gradient(135deg, #0f7b3f, #1cc88a);
   color: white;
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 30px 30px 0;
   cursor: pointer;
+  font-size: 16px;
 }
 
+/* CARD */
 .weather-card {
-  background: white;
-  color: #333;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
   padding: 25px;
-  border-radius: 12px;
-  width: 300px;
-  margin: 20px auto;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  transition: 0.3s;
 }
 
-.info {
-  margin-top: 15px;
+.weather-card:hover {
+  transform: translateY(-5px);
+}
+
+/* TOP */
+.top h2 {
+  margin: 0;
+}
+
+.desc {
+  text-transform: capitalize;
+  color: #555;
+  font-size: 14px;
+}
+
+/* TEMP */
+.temp-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.temp-section img {
+  width: 80px;
+}
+
+.temp-section h1 {
+  font-size: 42px;
+  margin-left: 10px;
+  color: #0f7b3f;
+}
+
+/* INFO GRID */
+.info-grid {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+/* INFO BOX */
+.info-box {
+  flex: 1;
+  background: #f8f9fa;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 12px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.info-box:hover {
+  background: #e9f7ef;
+  transform: scale(1.05);
+}
+
+.info-box span {
+  font-size: 20px;
+}
+
+.info-box p {
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+.info-box small {
+  color: gray;
 }

@@ -21,6 +21,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'corsheaders',          # ✅ CORS
     'farming',
+    'crops',
     'rest_framework', 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,6 +41,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'farming_app.urls'

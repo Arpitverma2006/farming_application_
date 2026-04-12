@@ -5,7 +5,7 @@ function Weather() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
 
-  const API_KEY = "ff3c26d70c0df4e73e29c2d9208cdf1d"; // 🔥 Put your OpenWeather API key here
+  const API_KEY = "ff3c26d70c0df4e73e29c2d9208cdf1d";
 
   const getWeather = async (cityName) => {
     try {
@@ -33,33 +33,64 @@ function Weather() {
 
   return (
     <div className="weather-wrapper">
-      <h1>🌾 Unnati Krashi</h1>
 
-      {/* Search */}
-      <form onSubmit={handleSearch} className="search-box">
-        <input
-          type="text"
-          placeholder="Enter city / village..."
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-        />
-        <button type="submit">Search</button>
-      </form>
+      <div className="weather-container">
 
-      {/* Weather Data */}
-      {weather && (
-        <div className="weather-card">
-          <h2>{weather.name}</h2>
-          <h1>{weather.main.temp}°C</h1>
-          <p>{weather.weather[0].description}</p>
+        <h1 className="title">🌾 Weather Dashboard</h1>
 
-          <div className="info">
-            <p>💧 Humidity: {weather.main.humidity}%</p>
-            <p>🌬 Wind: {weather.wind.speed} km/h</p>
-            <p>🌡 Feels Like: {weather.main.feels_like}°C</p>
+        {/* Search */}
+        <form onSubmit={handleSearch} className="search-box">
+          <input
+            type="text"
+            placeholder="Search city or village..."
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          />
+          <button type="submit">🔍</button>
+        </form>
+
+        {/* Weather */}
+        {weather && (
+          <div className="weather-card">
+
+            <div className="top">
+              <h2>{weather.name}</h2>
+              <p className="desc">{weather.weather[0].description}</p>
+            </div>
+
+            <div className="temp-section">
+              <img
+                src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+                alt="weather"
+              />
+              <h1>{Math.round(weather.main.temp)}°C</h1>
+            </div>
+
+            <div className="info-grid">
+              <div className="info-box">
+                <span>💧</span>
+                <p>{weather.main.humidity}%</p>
+                <small>Humidity</small>
+              </div>
+
+              <div className="info-box">
+                <span>🌬</span>
+                <p>{weather.wind.speed}</p>
+                <small>Wind</small>
+              </div>
+
+              <div className="info-box">
+                <span>🌡</span>
+                <p>{weather.main.feels_like}°C</p>
+                <small>Feels Like</small>
+              </div>
+            </div>
+
           </div>
-        </div>
-      )}
+        )}
+
+      </div>
+
     </div>
   );
 }
