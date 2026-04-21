@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ChatBot from "./ChatBot";
 import Weather from "./Weather"; // ✅ IMPORT ADDED
 import Crops from "./Crops";
+import MarketPrice from "./MarketPrice";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -211,7 +212,7 @@ function Dashboard() {
 
         {/* OTHER TABS */}
         {activeTab === "crops" && <div className="placeholder"><Crops /></div>}
-        {activeTab === "market" && <div className="placeholder"><h2>💰 Coming Soon</h2></div>}
+        {activeTab === "market" && <div className="placeholder"><h2><MarketPrice/></h2></div>}
         {activeTab === "analytics" && <div className="placeholder"><h2>📊 Coming Soon</h2></div>}
 
       </div>
