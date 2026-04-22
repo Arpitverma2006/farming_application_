@@ -1,5 +1,13 @@
 *.h5
+# Python
+*.pyc
+env/
 ml_env/
 venv/
 *.pyd
 __pycache__/
+
+*.keras
+*.pkl
+*.joblib
+
