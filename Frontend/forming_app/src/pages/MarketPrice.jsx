@@ -1,240 +1,114 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import "./MarketPrice.css";
 
-const marketData = [
-  {
-    id: 1,
-    crop: "Wheat",
-    category: "Cereals",
-    market: "Lucknow Mandi",
-    state: "Uttar Pradesh",
-    price: 2420,
-    unit: "per quintal",
-    trend: "up",
-    change: "+120",
-    updated: "Today, 9:30 AM",
-  },
-  {
-    id: 2,
-    crop: "Rice",
-    category: "Cereals",
-    market: "Kanpur Mandi",
-    state: "Uttar Pradesh",
-    price: 3180,
-    unit: "per quintal",
-    trend: "down",
-    change: "-60",
-    updated: "Today, 10:15 AM",
-  },
-  {
-    id: 3,
-    crop: "Potato",
-    category: "Vegetables",
-    market: "Agra Mandi",
-    state: "Uttar Pradesh",
-    price: 1450,
-    unit: "per quintal",
-    trend: "up",
-    change: "+80",
-    updated: "Today, 11:00 AM",
-  },
-  {
-    id: 4,
-    crop: "Tomato",
-    category: "Vegetables",
-    market: "Varanasi Mandi",
-    state: "Uttar Pradesh",
-    price: 2200,
-    unit: "per quintal",
-    trend: "stable",
-    change: "0",
-    updated: "Today, 8:45 AM",
-  },
-  {
-    id: 5,
-    crop: "Onion",
-    category: "Vegetables",
-    market: "Delhi Azadpur",
-    state: "Delhi",
-    price: 2650,
-    unit: "per quintal",
-    trend: "up",
-    change: "+140",
-    updated: "Today, 9:50 AM",
-  },
-  {
-    id: 6,
-    crop: "Mustard",
-    category: "Oil Seeds",
-    market: "Jaipur Mandi",
-    state: "Rajasthan",
-    price: 6020,
-    unit: "per quintal",
-    trend: "down",
-    change: "-90",
-    updated: "Today, 10:40 AM",
-  },
-  {
-    id: 7,
-    crop: "Maize",
-    category: "Cereals",
-    market: "Indore Mandi",
-    state: "Madhya Pradesh",
-    price: 2110,
-    unit: "per quintal",
-    trend: "stable",
-    change: "0",
-    updated: "Today, 12:10 PM",
-  },
-  {
-    id: 8,
-    crop: "Soybean",
-    category: "Oil Seeds",
-    market: "Bhopal Mandi",
-    state: "Madhya Pradesh",
-    price: 4980,
-    unit: "per quintal",
-    trend: "up",
-    change: "+110",
-    updated: "Today, 1:00 PM",
-  },
-];
+const API_KEY = import.meta.env.VITE_DATA_GOV_API_KEY;
 
 function MarketPrice() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [crop, setCrop] = useState("");
+  const [state, setState] = useState("");
+  const [marketData, setMarketData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const categories = ["All", "Cereals", "Vegetables", "Oil Seeds"];
+  const searchCropPrices = async () => {
+    if (!crop.trim()) {
+      setError("Please enter crop name");
+      return;
+    }
 
-  const filteredData = useMemo(() => {
-    return marketData.filter((item) => {
-      const matchesSearch =
-        item.crop.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.market.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.state.toLowerCase().includes(searchTerm.toLowerCase());
+    setLoading(true);
+    setError("");
+    setMarketData([]);
 
-      const matchesCategory =
-        selectedCategory === "All" || item.category === selectedCategory;
+    try {
+      let url =
+        `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070` +
+        `?api-key=${API_KEY}&format=json&limit=50` +
+        `&filters[commodity]=${encodeURIComponent(crop)}`;
 
-      return matchesSearch && matchesCategory;
-    });
-  }, [searchTerm, selectedCategory]);
+      if (state.trim()) {
+        url += `&filters[state]=${encodeURIComponent(state)}`;
+      }
 
-  const stats = useMemo(() => {
-    const totalMarkets = marketData.length;
-    const upCount = marketData.filter((item) => item.trend === "up").length;
-    const downCount = marketData.filter((item) => item.trend === "down").length;
-    const stableCount = marketData.filter((item) => item.trend === "stable").length;
+      const res = await fetch(url);
+      const data = await res.json();
 
-    return { totalMarkets, upCount, downCount, stableCount };
-  }, []);
-
-  const getTrendClass = (trend) => {
-    if (trend === "up") return "trend-up";
-    if (trend === "down") return "trend-down";
-    return "trend-stable";
-  };
-
-  const getTrendIcon = (trend) => {
-    if (trend === "up") return "📈";
-    if (trend === "down") return "📉";
-    return "➖";
+      if (!data.records || data.records.length === 0) {
+        setError("No mandi price found. Try another crop or state.");
+      } else {
+        setMarketData(data.records);
+      }
+    } catch (err) {
+      setError("Something went wrong while fetching market prices.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="market-section">
       <div className="market-header">
-        <span className="market-badge">Dashboard Market Insights</span>
+        <span className="market-badge">Live Market Prices</span>
         <h1>💹 Market Price Dashboard</h1>
         <p>
-          Track mandi rates, compare crop prices, and monitor trends to make
-          better selling decisions.
+          Search any crop and get mandi-wise minimum, maximum and modal prices.
         </p>
       </div>
 
-      <div className="market-stats-grid">
-        <div className="market-stat-card">
-          <span>Total Markets</span>
-          <h3>{stats.totalMarkets}</h3>
-        </div>
-        <div className="market-stat-card">
-          <span>Price Rising</span>
-          <h3>{stats.upCount}</h3>
-        </div>
-        <div className="market-stat-card">
-          <span>Price Falling</span>
-          <h3>{stats.downCount}</h3>
-        </div>
-        <div className="market-stat-card">
-          <span>Stable Rates</span>
-          <h3>{stats.stableCount}</h3>
-        </div>
-      </div>
-
       <div className="market-controls">
-        <div className="market-search-box">
-          <input
-            type="text"
-            placeholder="Search by crop, mandi, or state..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="Enter crop name e.g. Wheat, Rice, Onion"
+          value={crop}
+          onChange={(e) => setCrop(e.target.value)}
+        />
 
-        <div className="market-filter-group">
-          {categories.map((category) => (
-            <button
-              key={category}
-              className={`filter-btn ${
-                selectedCategory === category ? "active-filter" : ""
-              }`}
-              onClick={() => setSelectedCategory(category)}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
+        <input
+          type="text"
+          placeholder="Optional state e.g. Uttar Pradesh"
+          value={state}
+          onChange={(e) => setState(e.target.value)}
+        />
+
+        <button className="primary-btn" onClick={searchCropPrices}>
+          Search Prices
+        </button>
       </div>
+
+      {loading && <div className="empty-market-state">Loading prices...</div>}
+
+      {error && !loading && (
+        <div className="empty-market-state">
+          <h3>{error}</h3>
+        </div>
+      )}
 
       <div className="market-grid">
-        {filteredData.length > 0 ? (
-          filteredData.map((item) => (
-            <div className="market-card" key={item.id}>
-              <div className="market-card-top">
-                <div>
-                  <span className="crop-category">{item.category}</span>
-                  <h2>{item.crop}</h2>
-                </div>
-
-                <div className={`trend-badge ${getTrendClass(item.trend)}`}>
-                  {getTrendIcon(item.trend)} {item.change}
-                </div>
-              </div>
-
-              <div className="price-row">
-                <h3>₹ {item.price}</h3>
-                <span>{item.unit}</span>
-              </div>
-
-              <div className="market-info">
-                <p><strong>Mandi:</strong> {item.market}</p>
-                <p><strong>State:</strong> {item.state}</p>
-                <p><strong>Updated:</strong> {item.updated}</p>
-              </div>
-
-              <div className="market-card-footer">
-                <button className="secondary-btn">View Details</button>
-                <button className="primary-btn">Set Alert</button>
+        {marketData.map((item, index) => (
+          <div className="market-card" key={index}>
+            <div className="market-card-top">
+              <div>
+                <span className="crop-category">{item.commodity}</span>
+                <h2>{item.market}</h2>
               </div>
             </div>
-          ))
-        ) : (
-          <div className="empty-market-state">
-            <div className="empty-icon">🔍</div>
-            <h3>No market data found</h3>
-            <p>Try changing the search term or category filter.</p>
+
+            <div className="price-row">
+              <h3>₹ {item.modal_price}</h3>
+              <span>Modal Price / Quintal</span>
+            </div>
+
+            <div className="market-info">
+              <p><strong>State:</strong> {item.state}</p>
+              <p><strong>District:</strong> {item.district}</p>
+              <p><strong>Market:</strong> {item.market}</p>
+              <p><strong>Variety:</strong> {item.variety}</p>
+              <p><strong>Min Price:</strong> ₹ {item.min_price}</p>
+              <p><strong>Max Price:</strong> ₹ {item.max_price}</p>
+              <p><strong>Date:</strong> {item.arrival_date}</p>
+            </div>
           </div>
-        )}
+        ))}
       </div>
     </div>
   );
