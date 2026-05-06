@@ -285,3 +285,21 @@ textarea {
     font-size: 36px;
   }
 }
+
+.lang-btn {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: none;
+  background: white;
+  color: #0f7b3f;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.lang-btn:hover {
+  background: #e8f5e9;
+  transform: scale(1.02);
+}

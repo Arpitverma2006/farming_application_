@@ -4,13 +4,27 @@ import API from "../api";
 
 function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // ✅ Language State
+  const [language, setLanguage] = useState("en");
+
   const chatEndRef = useRef(null);
 
   const toggleChat = () => setIsOpen(!isOpen);
+
+  // ✅ Fullscreen Toggle
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
+  // ✅ Language Toggle
+  const toggleLanguage = () => {
+    setLanguage((prev) => (prev === "en" ? "hi" : "en"));
+  };
 
   // ✅ Auto scroll
   useEffect(() => {
@@ -21,26 +35,30 @@ function ChatBot() {
     const trimmedMessage = message.trim();
     if (!trimmedMessage) return;
 
-    // ✅ Clear input immediately (better UX)
     setMessage("");
 
-    // ✅ Add user message instantly
-    const userMsg = { sender: "user", text: trimmedMessage };
+    const userMsg = {
+      sender: "user",
+      text: trimmedMessage
+    };
+
     setChat((prev) => [...prev, userMsg]);
 
     setLoading(true);
 
     try {
-      // ✅ Send to backend
       const res = await API.post("chat/", {
-        message: trimmedMessage
+        message: trimmedMessage,
+        language: language
       });
 
-      console.log("API Response:", res.data); // DEBUG
+      console.log("API Response:", res.data);
 
-      // ✅ Handle response safely
       const botReply =
-        res?.data?.reply || "⚠️ No response from AI";
+        res?.data?.reply ||
+        (language === "hi"
+          ? "⚠️ AI से कोई उत्तर नहीं मिला"
+          : "⚠️ No response from AI");
 
       const botMsg = {
         sender: "bot",
@@ -56,7 +74,10 @@ function ChatBot() {
         ...prev,
         {
           sender: "bot",
-          text: "⚠️ Server error. Please try again."
+          text:
+            language === "hi"
+              ? "⚠️ सर्वर त्रुटि। कृपया पुनः प्रयास करें।"
+              : "⚠️ Server error. Please try again."
         }
       ]);
     }
@@ -81,17 +102,40 @@ function ChatBot() {
       </div>
 
       {/* Chat Window */}
-      <div className={`chat-container ${isOpen ? "open" : ""}`}>
-
+      <div
+        className={`chat-container ${isOpen ? "open" : ""} ${
+          isFullscreen ? "fullscreen" : ""
+        }`}
+      >
         <div className="chat-header">
-          🌾 Krishi AI
-          <span onClick={toggleChat}>✖</span>
+          🌾 {language === "hi" ? "कृषि AI" : "Krishi AI"}
+
+          <div className="chat-actions">
+
+            {/* Language Button */}
+            <button
+              className="lang-btn"
+              onClick={toggleLanguage}
+            >
+              {language === "en" ? "हिंदी" : "English"}
+            </button>
+
+            {/* Fullscreen Button */}
+            <span onClick={toggleFullscreen}>
+              {isFullscreen ? "🗗" : "🗖"}
+            </span>
+
+            {/* Close Button */}
+            <span onClick={toggleChat}>✖</span>
+          </div>
         </div>
 
         <div className="chat-box">
           {chat.length === 0 && (
             <div className="msg bot welcome">
-              👋 Ask me about crops, weather, farming tips!
+              {language === "hi"
+                ? "👋 फसलों, मौसम और खेती के सुझाव पूछें!"
+                : "👋 Ask me about crops, weather, farming tips!"}
             </div>
           )}
 
@@ -102,7 +146,11 @@ function ChatBot() {
           ))}
 
           {loading && (
-            <div className="msg bot typing">Typing...</div>
+            <div className="msg bot typing">
+              {language === "hi"
+                ? "टाइप किया जा रहा है..."
+                : "Typing..."}
+            </div>
           )}
 
           <div ref={chatEndRef}></div>
@@ -113,11 +161,17 @@ function ChatBot() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask something..."
+            placeholder={
+              language === "hi"
+                ? "कुछ पूछें..."
+                : "Ask something..."
+            }
           />
-          <button onClick={sendMessage}>➤</button>
-        </div>
 
+          <button onClick={sendMessage}>
+            {language === "hi" ? "भेजें" : "➤"}
+          </button>
+        </div>
       </div>
     </>
   );

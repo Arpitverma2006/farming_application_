@@ -1,9 +1,9 @@
-
 .advisory-wrapper {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f7b3f, #5bbf6a);
-  padding: 30px;
-  color: white;
+  background: linear-gradient(135deg, #eaf8ee, #ffffff);
+  padding: 35px;
+  font-family: "Segoe UI", sans-serif;
+  color: #1f2937;
 }
 
 .advisory-header {
@@ -11,53 +11,164 @@
   margin-bottom: 30px;
 }
 
+.tagline {
+  display: inline-block;
+  background: #dff5e6;
+  color: #0f7b3f;
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
 .advisory-header h1 {
-  font-size: 32px;
+  font-size: 36px;
+  color: #0f7b3f;
+  margin-bottom: 10px;
 }
 
 .advisory-header p {
-  margin-top: 10px;
-  opacity: 0.9;
+  max-width: 750px;
+  margin: auto;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.vision-box {
+  max-width: 1000px;
+  margin: 0 auto 35px;
+  background: linear-gradient(135deg, #0f7b3f, #0c5f30);
+  color: white;
+  padding: 28px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(15, 123, 63, 0.25);
+}
+
+.vision-box h2 {
+  margin-bottom: 10px;
+  font-size: 28px;
+}
+
+.vision-box p {
+  line-height: 1.6;
+  opacity: 0.95;
 }
 
 .advisory-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
 }
 
 .advisory-card {
   background: white;
-  color: #333;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  transition: 0.3s;
+  padding: 24px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.09);
+  transition: 0.3s ease;
+  border: 1px solid #e5e7eb;
 }
 
 .advisory-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
+  box-shadow: 0 14px 35px rgba(15, 123, 63, 0.18);
+}
+
+.advisory-icon {
+  width: 58px;
+  height: 58px;
+  background: #eaf8ee;
+  color: #0f7b3f;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 15px;
 }
 
 .advisory-card h3 {
+  color: #0f7b3f;
   margin-bottom: 10px;
+  font-size: 22px;
 }
 
 .advisory-card p {
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.advice-list {
+  margin-top: 18px;
+  background: #f8faf9;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.advice-list h4 {
+  color: #0c5f30;
+  margin-bottom: 10px;
+}
+
+.advice-list ul {
+  padding-left: 18px;
+}
+
+.advice-list li {
   font-size: 14px;
+  margin-bottom: 8px;
+  color: #374151;
+  line-height: 1.5;
 }
 
 .advisory-card button {
-  margin-top: 15px;
-  padding: 10px 15px;
-  background: #0f7b3f;
+  margin-top: 18px;
+  width: 100%;
+  padding: 12px 15px;
+  background: linear-gradient(135deg, #0f7b3f, #0c5f30);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
 }
 
 .advisory-card button:hover {
-  background: #0c5f30;
+  background: linear-gradient(135deg, #0c5f30, #084522);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .advisory-wrapper {
+    padding: 25px 18px;
+  }
+
+  .advisory-header h1 {
+    font-size: 30px;
+  }
+
+  .vision-box {
+    padding: 22px;
+  }
+
+  .vision-box h2 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .advisory-header h1 {
+    font-size: 26px;
+  }
+
+  .advisory-card {
+    padding: 20px;
+  }
+
+  .advisory-grid {
+    grid-template-columns: 1fr;
+  }
 }
